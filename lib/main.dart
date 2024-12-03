@@ -1,13 +1,17 @@
 import 'package:credit_system/src/auth/auth_service.dart';
 import 'package:credit_system/src/pages/add_cliente.dart';
+import 'package:credit_system/src/pages/add_pago.dart';
 import 'package:credit_system/src/pages/add_prestamo.dart';
 import 'package:credit_system/src/pages/clientes.dart';
 import 'package:credit_system/src/pages/dashboard.dart';
 import 'package:credit_system/src/pages/edit_cliente.dart';
 import 'package:credit_system/src/pages/edit_prestamo.dart';
 import 'package:credit_system/src/pages/login.dart';
+import 'package:credit_system/src/pages/pagos.dart';
 import 'package:credit_system/src/pages/prestamos.dart';
 import 'package:credit_system/src/pages/register.dart';
+import 'package:credit_system/src/widgets/select_cliente.dart';
+import 'package:credit_system/src/widgets/select_prestamo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -46,9 +50,30 @@ class MyApp extends StatelessWidget {
               credit: ModalRoute.of(context)!.settings.arguments
                   as Map<String, dynamic>,
             ),
-
-        // '/pagos': (context) => const PagosPage(), // A implementar
-        // '/consultas': (context) => const ConsultasPage(), // A implementar
+        '/pagos': (context) => const PagosPage(),
+        '/pagos/add': (context) => SelectClienteWidget(
+              onClienteSelected: (clienteId) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SelectPrestamoWidget(
+                      clienteId: clienteId,
+                      onPrestamoSelected: (prestamoId, balanceDisponible) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddPagoPage(
+                              prestamoId: prestamoId,
+                              balanceDisponible: balanceDisponible,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                );
+              },
+            ),
       },
     );
   }
