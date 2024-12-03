@@ -30,38 +30,71 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Iniciar sesión'),
-        centerTitle: true,
-      ),
+      backgroundColor: const Color(0xFFF7F4E8), // Fondo claro
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Logo
+                Image.asset(
+                  'assets/logo.png', // Asegúrate de agregar el logo en esta ruta
+                  height: 120,
+                ),
+                const SizedBox(height: 32),
+                // Campo de Email
+                TextField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Campo de Password
+                TextField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  obscureText: true,
+                ),
+                const SizedBox(height: 24),
+                // Botón de Iniciar Sesión
+                ElevatedButton(
+                  onPressed: _signIn,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF6BB39B),
+                    minimumSize: const Size(double.infinity, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    'Iniciar Sesión',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Enlace de Registro
+                TextButton(
+                  onPressed: () =>
+                      Navigator.pushReplacementNamed(context, '/register'),
+                  child: const Text(
+                    'No tienes una cuenta? Regístrate',
+                    style: TextStyle(color: Color(0xFF0B0B0D)),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(
-              height: 15,
-            ),
-            TextField(
-              controller: _passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _signIn,
-              child: const Text('Iniciar Sesión'),
-            ),
-            TextButton(
-              onPressed: () =>
-                  Navigator.pushReplacementNamed(context, '/register'),
-              child: const Text('No tienes una cuenta? Registrate'),
-            ),
-          ],
+          ),
         ),
       ),
     );
