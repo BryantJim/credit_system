@@ -89,10 +89,6 @@ class _DashboardPageState extends State<DashboardPage> {
                 child: Text('Pagos'),
               ),
               const PopupMenuItem(
-                value: 'Consultas',
-                child: Text('Consultas'),
-              ),
-              const PopupMenuItem(
                 value: 'Cerrar Sesión',
                 child: Text('Cerrar Sesión'),
               ),
