@@ -43,7 +43,29 @@ class _PagosPageState extends State<PagosPage> {
 
   Future<void> deletePayment(String id) async {
     try {
+      final response = await _supabase
+          .from('pagos')
+          .select('monto, prestamo_id')
+          .eq('id', id)
+          .single();
+
+      final monto = response['monto'];
+      final prestamoId = response['prestamo_id'];
+
+      final prestamoResponse = await _supabase
+          .from('Prestamos')
+          .select('balance_disponible')
+          .eq('id', prestamoId)
+          .single();
+
+      final double balanceActual = prestamoResponse['balance_disponible'];
+
       await _supabase.from('pagos').delete().eq('id', id);
+
+      await _supabase.from('Prestamos').update({
+        'balance_disponible': balanceActual + monto,
+      }).eq('id', prestamoId);
+
       fetchPayments();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Pago eliminado correctamente!')),

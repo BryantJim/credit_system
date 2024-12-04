@@ -109,7 +109,21 @@ class _DashboardPageState extends State<DashboardPage> {
               const PopupMenuItem(value: 'Pagos', child: Text('Pagos')),
               const PopupMenuItem(value: 'Consultas', child: Text('Consultas')),
               const PopupMenuItem(
-                  value: 'Cerrar Sesión', child: Text('Cerrar Sesión')),
+                value: 'Clientes',
+                child: Text('Clientes'),
+              ),
+              const PopupMenuItem(
+                value: 'Préstamos',
+                child: Text('Préstamos'),
+              ),
+              const PopupMenuItem(
+                value: 'Pagos',
+                child: Text('Pagos'),
+              ),
+              const PopupMenuItem(
+                value: 'Cerrar Sesión',
+                child: Text('Cerrar Sesión'),
+              ),
             ],
           ),
         ],
