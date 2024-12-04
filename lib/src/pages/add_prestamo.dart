@@ -106,69 +106,117 @@ class _AddPrestamoPageState extends State<AddPrestamoPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Agregar Préstamo')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              DropdownButtonFormField<String>(
-                value: selectedClienteId,
-                onChanged: (value) => setState(() => selectedClienteId = value),
-                items: clientes
-                    .map((cliente) => DropdownMenuItem<String>(
-                          value: cliente['id'],
-                          child: Text(
-                              '${cliente['nombre']} ${cliente['apellido']}'),
-                        ))
-                    .toList(),
-                decoration: const InputDecoration(labelText: 'Cliente'),
+ Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text('Agregar Préstamo'),
+      centerTitle: true,
+    ),
+    body: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
-              TextField(
-                controller: _montoController,
-                decoration: const InputDecoration(labelText: 'Monto'),
-                keyboardType: TextInputType.number,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                child: Column(
+                  children: [
+                    DropdownButtonFormField<String>(
+                      value: selectedClienteId,
+                      onChanged: (value) => setState(() => selectedClienteId = value),
+                      items: clientes
+                          .map((cliente) => DropdownMenuItem<String>(
+                                value: cliente['id'],
+                                child: Text(
+                                  '${cliente['nombre']} ${cliente['apellido']}',
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ))
+                          .toList(),
+                      decoration: InputDecoration(
+                        labelText: 'Cliente',
+                        labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blue.shade400),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                        fillColor: Colors.grey.shade100,
+                        filled: true,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    _buildTextField('Monto', _montoController, keyboardType: TextInputType.number),
+                    const SizedBox(height: 20),
+                    _buildTextField('Plazo (en meses)', _plazoController, keyboardType: TextInputType.number),
+                    const SizedBox(height: 20),
+                    _buildTextField('Tasa de Interés (%)', _tasaController, keyboardType: TextInputType.number),
+                    const SizedBox(height: 16),
+                    // Campos de solo lectura
+                    _buildTextField('Total Interés', _totalInteresController, readOnly: true),
+                    const SizedBox(height: 20),
+                    _buildTextField('Total Préstamo', _totalPrestamoController, readOnly: true),
+                    const SizedBox(height: 20),
+                    _buildTextField('Monto Cuotas', _montoCuotasController, readOnly: true),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: addPrestamo,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        backgroundColor: Colors.blue.shade600, // Color del fondo
+                      ),
+                      child: const Text(
+                        'Guardar',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white, // Texto blanco
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              TextField(
-                controller: _plazoController,
-                decoration:
-                    const InputDecoration(labelText: 'Plazo (en meses)'),
-                keyboardType: TextInputType.number,
-              ),
-              TextField(
-                controller: _tasaController,
-                decoration:
-                    const InputDecoration(labelText: 'Tasa de Interés (%)'),
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 16),
-              // Campos de solo lectura
-              TextField(
-                controller: _totalInteresController,
-                decoration: const InputDecoration(labelText: 'Total Interés'),
-                readOnly: true,
-              ),
-              TextField(
-                controller: _totalPrestamoController,
-                decoration: const InputDecoration(labelText: 'Total Préstamo'),
-                readOnly: true,
-              ),
-              TextField(
-                controller: _montoCuotasController,
-                decoration: const InputDecoration(labelText: 'Monto Cuotas'),
-                readOnly: true,
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: addPrestamo,
-                child: const Text('Guardar'),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
+// Widget para TextField reutilizable
+Widget _buildTextField(String label, TextEditingController controller, 
+    {TextInputType keyboardType = TextInputType.text, bool readOnly = false}) {
+  return TextField(
+    controller: controller,
+    keyboardType: keyboardType,
+    readOnly: readOnly,
+    decoration: InputDecoration(
+      labelText: label,
+      labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.blue.shade400),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      fillColor: Colors.grey.shade100,
+      filled: true, // Fondo suave
+    ),
+  );
+}
+
 }

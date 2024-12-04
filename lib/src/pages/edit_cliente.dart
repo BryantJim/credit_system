@@ -66,63 +66,87 @@ class _EditClientePageState extends State<EditClientePage> {
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              TextField(
-                controller: _nombreController,
-                decoration: const InputDecoration(labelText: 'Nombre'),
+              Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                  child: Column(
+                    children: [
+                      _buildTextField('Nombre', _nombreController),
+                      const SizedBox(height: 20),
+                      _buildTextField('Apellido', _apellidoController),
+                      const SizedBox(height: 20),
+                      _buildTextField('Fecha de Nacimiento (YYYY-MM-DD)',
+                          _fechaNacimientoController,
+                          keyboardType: TextInputType.datetime),
+                      const SizedBox(height: 20),
+                      _buildTextField('Email', _emailController,
+                          keyboardType: TextInputType.emailAddress),
+                      const SizedBox(height: 20),
+                      _buildTextField('Teléfono', _telefonoController,
+                          keyboardType: TextInputType.phone),
+                      const SizedBox(height: 20),
+                      _buildTextField('Dirección', _direccionController),
+                    ],
+                  ),
+                ),
               ),
-              const SizedBox(
-                height: 15,
-              ),
-              TextField(
-                controller: _apellidoController,
-                decoration: const InputDecoration(labelText: 'Apellido'),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              TextField(
-                controller: _fechaNacimientoController,
-                decoration: const InputDecoration(
-                    labelText: 'Fecha de Nacimiento (YYYY-MM-DD)'),
-                keyboardType: TextInputType.datetime,
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              TextField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              TextField(
-                controller: _telefonoController,
-                decoration: const InputDecoration(labelText: 'Telefono'),
-                keyboardType: TextInputType.phone,
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              TextField(
-                controller: _direccionController,
-                decoration: const InputDecoration(labelText: 'Dirección'),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
+              const SizedBox(height: 30),
               ElevatedButton(
                   onPressed: updateClient,
-                  child: const Text('Guardar Cambios')),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    backgroundColor: Colors.blue.shade600, // Color del fondo
+                  ),
+                  child: const Text(
+                    'Guardar Cambios',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white, // Texto blanco
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
       ),
     );
   }
+
+// Widget para TextField reutilizable
+  Widget _buildTextField(String label, TextEditingController controller,
+      {TextInputType keyboardType = TextInputType.text}) {
+    return TextField(
+      controller: controller,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.blue.shade400),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        fillColor: Colors.grey.shade100,
+        filled: true, // Fondo suave
+      ),
+    );
+  }
+  
 }

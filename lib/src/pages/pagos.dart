@@ -29,7 +29,7 @@ class _PagosPageState extends State<PagosPage> {
 
     try {
       final response = await _supabase.from('pagos').select();
-
+      print('Pagos recibidos: $response');
       setState(() {
         payments = response;
         isLoading = false;
@@ -105,18 +105,45 @@ class _PagosPageState extends State<PagosPage> {
                   itemCount: payments.length,
                   itemBuilder: (context, index) {
                     final payment = payments[index];
-                    return ListTile(
-                      title: Text(
-                        'Monto: \$${payment['monto'].toStringAsFixed(2)}',
+                    return Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      subtitle: Text(
-                        'Fecha: ${DateTime.parse(payment['fecha_pago']).toLocal()}',
-                      ),
-                      trailing: IconButton(
-                        onPressed: () => deletePayment(payment['id']),
-                        icon: const Icon(
-                          Icons.delete,
-                          color: Colors.red,
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        title: Text(
+                          'Monto: \$${payment['monto'].toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Fecha: ${DateTime.parse(payment['fecha_pago']).toLocal()}',
+                              style: TextStyle(color: Colors.grey.shade600),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Tipo de Pago: ${payment['tipo_pago'] ?? 'Desconocido'}',
+                              style: TextStyle(
+                                color: Colors.blue.shade700,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                        trailing: IconButton(
+                          onPressed: () => deletePayment(payment['id']),
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                          ),
                         ),
                       ),
                     );

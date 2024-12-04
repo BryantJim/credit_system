@@ -53,36 +53,73 @@ class _PrestamosPageState extends State<PrestamosPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Préstamos'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              Navigator.pushNamed(context, '/prestamos/add')
-                  .then((_) => fetchPrestamos());
-            },
-          ),
-        ],
-      ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: credits.length,
-              itemBuilder: (context, index) {
-                final prestamo = credits[index];
-                return ListTile(
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text('Préstamos'),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.add),
+          onPressed: () {
+            Navigator.pushNamed(context, '/prestamos/add')
+                .then((_) => fetchPrestamos());
+          },
+        ),
+      ],
+    ),
+    body: isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : ListView.builder(
+            itemCount: credits.length,
+            itemBuilder: (context, index) {
+              final prestamo = credits[index];
+              return Card(
+                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 4,
+                child: ListTile(
+                  contentPadding: const EdgeInsets.all(16),
                   title: Text(
                     '${prestamo['Clientes']['nombre']} ${prestamo['Clientes']['apellido']}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
-                  subtitle: Text(
-                    'Monto Total: \$${prestamo['total_prestamo']}, Interes: \$${prestamo['total_interes']}, Balance: \$${prestamo['balance_disponible']}',
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 5),
+                      Text(
+                        'Monto Total: \$${prestamo['total_prestamo']}',
+                        style: TextStyle(
+                          color: Colors.green.shade700,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        'Interés: \$${prestamo['total_interes']}',
+                        style: TextStyle(
+                          color: Colors.blue.shade700,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        'Balance: \$${prestamo['balance_disponible']}',
+                        style: TextStyle(
+                          color: Colors.orange.shade700,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
                   trailing: IconButton(
                     icon: const Icon(Icons.delete, color: Colors.red),
-                    onPressed: () => deletePrestamo(prestamo['id']),
+                    onPressed: () => _confirmDeletePrestamo(context, prestamo['id']),
                   ),
                   onTap: () {
                     Navigator.push(
@@ -93,9 +130,38 @@ class _PrestamosPageState extends State<PrestamosPage> {
                       ),
                     ).then((_) => fetchPrestamos());
                   },
-                );
-              },
-            ),
-    );
-  }
+                ),
+              );
+            },
+          ),
+  );
+}
+
+// Función para mostrar el diálogo de confirmación
+void _confirmDeletePrestamo(BuildContext context, String prestamoId) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Confirmar Eliminación'),
+      content: const Text('¿Estás seguro de que deseas eliminar este préstamo?'),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(); // Cierra el diálogo sin hacer nada
+          },
+          child: const Text('Cancelar'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(); // Cierra el diálogo
+            deletePrestamo(prestamoId); // Llama a la función para eliminar el préstamo
+          },
+          child: const Text('Eliminar', style: TextStyle(color: Colors.red)),
+        ),
+      ],
+    ),
+  );
+}
+
+
 }

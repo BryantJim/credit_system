@@ -50,6 +50,37 @@ class _ClientesPageState extends State<ClientesPage> {
     }
   }
 
+  void _showDeleteConfirmationDialog(String clientId) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Confirmar eliminación'),
+        content: const Text('¿Estás seguro de que deseas eliminar este cliente? Esta acción no se puede deshacer.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Cierra el diálogo
+            },
+            child: const Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Cierra el diálogo
+              deleteClient(clientId); // Elimina el cliente
+            },
+            child: const Text(
+              'Eliminar',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,23 +102,52 @@ class _ClientesPageState extends State<ClientesPage> {
               itemCount: clients.length,
               itemBuilder: (context, index) {
                 final client = clients[index];
-                return ListTile(
-                  title: Text('${client['nombre']} ${client['apellido']}'),
-                  subtitle: Text('Email: ${client['email']}'),
-                  trailing: IconButton(
-                      onPressed: () => deleteClient(client['id']),
-                      icon: const Icon(
-                        Icons.delete,
-                        color: Colors.red,
-                      )),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EditClientePage(client: client),
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 8.0),
+                  child: Card(
+                    elevation: 4, // Sombra para que resalte
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(12), // Bordes redondeados
+                    ),
+                    child: ListTile(
+                      contentPadding:
+                          const EdgeInsets.all(16.0), // Más espacio interno
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.blue.shade100,
+                        child: Text(
+                          client['nombre']!.substring(0, 1).toUpperCase(),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ), // Avatar con inicial
+                      title: Text(
+                        '${client['nombre']} ${client['apellido']}',
+                        style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
-                    ).then((_) => fetchClients());
-                  },
+                      subtitle: Text(
+                        'Email: ${client['email']}',
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                      trailing: IconButton(
+                        onPressed: () =>
+                            _showDeleteConfirmationDialog(client['id']),
+                        icon: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                EditClientePage(client: client),
+                          ),
+                        ).then((_) => fetchClients());
+                      },
+                    ),
+                  ),
                 );
               },
             ),
