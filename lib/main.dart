@@ -58,13 +58,15 @@ class MyApp extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => SelectPrestamoWidget(
                       clienteId: clienteId,
-                      onPrestamoSelected: (prestamoId, balanceDisponible) {
+                      onPrestamoSelected:
+                          (prestamoId, balanceDisponible, montoCuota) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => AddPagoPage(
                               prestamoId: prestamoId,
                               balanceDisponible: balanceDisponible,
+                              montoCuota: montoCuota,
                             ),
                           ),
                         );

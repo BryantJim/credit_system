@@ -4,11 +4,13 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class AddPagoPage extends StatefulWidget {
   final String prestamoId;
   final double balanceDisponible;
+  final double montoCuota;
 
   const AddPagoPage({
     super.key,
     required this.prestamoId,
     required this.balanceDisponible,
+    required this.montoCuota,
   });
 
   @override
@@ -63,62 +65,54 @@ class _AddPagoPageState extends State<AddPagoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Registrar Pago'),
-      ),
+      appBar: AppBar(title: const Text('Registrar Pago')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Card(
-            elevation: 5,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  TextField(
-                    controller: _montoController,
-                    decoration: InputDecoration(
-                      labelText: 'Monto',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    keyboardType: TextInputType.number,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(height: 16),
-                  DropdownButtonFormField<String>(
-                    value: tipoPago,
-                    onChanged: (value) => setState(() => tipoPago = value!),
-                    items: const [
-                      DropdownMenuItem(value: 'cuota', child: Text('Pago de Cuota')),
-                      DropdownMenuItem(value: 'abono', child: Text('Abono')),
-                    ],
-                    decoration: InputDecoration(
-                      labelText: 'Tipo de Pago',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: registrarPago,
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 48),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: const Text('Registrar Pago'),
-                  ),
-                ],
+        child: Column(
+          children: [
+            if (tipoPago == 'cuota')
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Text(
+                  'Valor de la cuota: \$${widget.montoCuota.toStringAsFixed(2)}',
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
+                ),
               ),
+            if (tipoPago == 'abono')
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Text(
+                  'Balance disponible: \$${widget.balanceDisponible.toStringAsFixed(2)}',
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+            TextField(
+              controller: _montoController,
+              decoration: InputDecoration(
+                labelText: 'Monto',
+                hintText: tipoPago == 'cuota'
+                    ? 'Monto sugerido: ${widget.montoCuota.toStringAsFixed(2)}'
+                    : 'Monto sugerido: ${widget.balanceDisponible.toStringAsFixed(2)}',
+              ),
+              keyboardType: TextInputType.number,
             ),
-          ),
+            DropdownButtonFormField<String>(
+              value: tipoPago,
+              onChanged: (value) => setState(() => tipoPago = value!),
+              items: const [
+                DropdownMenuItem(value: 'cuota', child: Text('Pago de Cuota')),
+                DropdownMenuItem(value: 'abono', child: Text('Abono')),
+              ],
+              decoration: const InputDecoration(labelText: 'Tipo de Pago'),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: registrarPago,
+              child: const Text('Registrar Pago'),
+            ),
+          ],
         ),
       ),
     );

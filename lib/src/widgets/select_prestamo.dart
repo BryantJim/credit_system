@@ -3,7 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SelectPrestamoWidget extends StatelessWidget {
   final String clienteId;
-  final Function(String, double) onPrestamoSelected;
+  final Function(String, double, double) onPrestamoSelected;
 
   const SelectPrestamoWidget(
       {super.key, required this.clienteId, required this.onPrestamoSelected});
@@ -38,8 +38,8 @@ class SelectPrestamoWidget extends StatelessWidget {
               return ListTile(
                 title: Text('Monto: \$${prestamo['monto']}'),
                 subtitle: Text('Balance: \$${prestamo['balance_disponible']}'),
-                onTap: () => onPrestamoSelected(
-                    prestamo['id'], prestamo['balance_disponible']),
+                onTap: () => onPrestamoSelected(prestamo['id'],
+                    prestamo['balance_disponible'], prestamo['monto_cuotas']),
               );
             },
           );

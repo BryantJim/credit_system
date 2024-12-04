@@ -97,13 +97,14 @@ class _PagosPageState extends State<PagosPage> {
                           builder: (context) => SelectPrestamoWidget(
                             clienteId: clienteId,
                             onPrestamoSelected:
-                                (prestamoId, balanceDisponible) {
+                                (prestamoId, balanceDisponible, montoCuotas) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => AddPagoPage(
                                     prestamoId: prestamoId,
                                     balanceDisponible: balanceDisponible,
+                                    montoCuota: montoCuotas,
                                   ),
                                 ),
                               ).then((_) => fetchPayments());
